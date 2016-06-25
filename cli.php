@@ -1,4 +1,8 @@
 <?php
+/**
+ * Base16 Builder CLI (Command Line Interface)
+ */
+
 $loader = require __DIR__ . '/vendor/autoload.php';
 
 use Base16\Builder;
@@ -17,7 +21,7 @@ switch (@$argv[1]) {
 	* Displays a help message
 	*/
 	case '-h':
-		echo "Base16 Builder PHP\n";
+		echo "Base16 Builder PHP CLI\n";
 		echo "https://github.com/chriskempson/base16-builder-php\n";
 		break;
 	
@@ -34,26 +38,23 @@ switch (@$argv[1]) {
 	*/
 	default:
 
-		// Loop scheme directories
+		// Loop scheme repositories
 		foreach ($sch_list as $sch_name => $sch_url) {
 
-			$sch_names = ['scheme-dark', 'scheme-light'];
-
 			// Loop scheme files
-			foreach ($sch_names as $sch_file) {
+			foreach (glob("schemes/$sch_name/*.yaml") as $sch_file) {
 
-				$sch_file = "schemes/$sch_name/$sch_file.yaml";
+				$sch_data = $builder->parse($sch_file);
+				$tpl_data = $builder->buildTemplateData($sch_data);
+			
+				// Loop templates repositories
+				foreach ($tpl_list as $tpl_name => $tpl_url) {
 
-				if (file_exists($sch_file)) {
+					$tpl_confs = $builder->parse(
+						"templates/$tpl_name/templates/config.yaml");
 
-					$sch_data = $builder->parse($sch_file);
-					$tpl_data = $builder->buildTemplateData($sch_data);
-				
-					// Loop templates
-					foreach ($tpl_list as $tpl_name => $tpl_url) {
-
-						$tpl_conf = $builder->parse(
-							"templates/$tpl_name/template-config.yaml");
+					// Loop template files
+					foreach ($tpl_confs as $tpl_file => $tpl_conf) {
 
 						$file_path = "templates/$tpl_name/" 
 							. @$tpl_conf['output'];
@@ -62,15 +63,15 @@ switch (@$argv[1]) {
 							. $tpl_conf['extension'];
 						
 						$render = $builder->renderTemplate(
-							"templates/$tpl_name/template.mustache", $tpl_data);
+							"templates/$tpl_name/templates/$tpl_file.mustache", $tpl_data);
 
-						$builder->writeFile($file_path.$file_name, $render);
+						$builder->writeFile($file_path, $file_name, $render);
 
 						echo "Built $file_name\n";
-
 					}
 
 				}
+
 			}
 		}
 		break;

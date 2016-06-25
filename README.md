@@ -4,11 +4,12 @@ Requires PHP 5.3 or greater
 
 ## Installation
     git clone https://github.com/chriskempson/base16-builder-php
+    cd base16-builder-php
     composer install
 
 ## Usage
-    php base16 update
+    php cli.php update
 Updates all scheme and template repositories as defined in `schemes.yaml` and `templates.yaml`.
 
-    php base16
+    php cli.php
 Build all templates using all schemes

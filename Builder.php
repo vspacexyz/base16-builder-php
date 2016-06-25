@@ -99,9 +99,10 @@ class Builder
 	/**
 	 * Writes a file
 	 */
-	function writeFile($contents, $path) 
+	function writeFile($file_path, $file_name, $contents) 
 	{
-		file_put_contents($contents, $path);
+		if (!is_dir($file_path)) mkdir($file_path);
+		file_put_contents($file_path . '/' . $file_name, $contents);
 	}
-
+	
 }
