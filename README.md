@@ -1,5 +1,5 @@
 # Base16 Builder PHP
-An example PHP implementation of a base16 builder that follows the conventions found at https://github.com/chriskempson/base16  
+An example PHP implementation of a base16 builder that follows the conventions described at https://github.com/chriskempson/base16.
 Requires PHP 5.3 or greater.
 
 **This is an early proof of concept application and is likely to change**
