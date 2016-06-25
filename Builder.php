@@ -1,108 +1,96 @@
 <?php
 /**
- * A PHP implementation of a Base16 Theme Builder
- * Chris Kempson (http://chriskempson.com)
- *
- * Follows the conventions at
- *     http://chriskempson.com/projects/base16/builder.md
+ * Base16 Builder CLI (Command Line Interface)
  */
- 
-namespace Base16;
 
-use Symfony\Component\Yaml\Yaml;
-use Mexitek\PHPColors\Color;
+// Source paths
+$sources_list = 'sources.yaml';
+$schemes_list = 'sources/schemes/list.yaml';
+$templates_list = 'sources/templates/list.yaml';
 
-class Builder 
-{
+$loader = require __DIR__ . '/vendor/autoload.php';
+
+use Base16\Builder;
+
+$builder = new Builder;
+
+// Parse sources lists
+$src_list = $builder->parse($sources_list);
+if (file_exists($schemes_list)) $sch_list = $builder->parse($schemes_list);
+if (file_exists($schemes_list)) $tpl_list = $builder->parse($templates_list);
+
+/**
+ * Switches between functions based on supplied argument
+ */
+switch (@$argv[1]) {
 
 	/**
-	 * Parses a YAML file
-	 */
-	function parse($path) 
-	{
-		return Yaml::parse( file_get_contents($path) );
-	}
+	* Displays a help message
+	*/
+	case '-h':
+		echo "Base16 Builder PHP CLI\n";
+		echo "https://github.com/chriskempson/base16-builder-php\n";
+		break;
+	
+	/**
+	* Updates template and scheme sources
+	*/
+	case 'update':
+		$builder->updateSources($src_list, 'sources');
+
+		// Parse source lists incase the sources have just been fetched
+		if (file_exists($schemes_list)) {
+			$sch_list = $builder->parse($schemes_list);
+		}
+
+		if (file_exists($schemes_list)) {
+			$tpl_list = $builder->parse($templates_list);
+		}
+
+		$builder->updateSources($sch_list, 'schemes');
+		$builder->updateSources($tpl_list, 'templates');
+		break;
 
 	/**
-	 * Uses git to fetch template or scheme sources
-	 */
-	function fetchSources($url_list, $path) 
-	{
-		foreach ($url_list as $name => $url) {
-			if (!file_exists("$path/$name")) { 
-				exec("git clone $url $path/$name\n");
+	* Build all themes and schemes
+	*/
+	default:
+
+		// Loop scheme repositories
+		foreach ($sch_list as $sch_name => $sch_url) {
+
+			// Loop scheme files
+			foreach (glob("schemes/$sch_name/*.yaml") as $sch_file) {
+
+				$sch_data = $builder->parse($sch_file);
+				$tpl_data = $builder->buildTemplateData($sch_data);
+			
+				// Loop templates repositories
+				foreach ($tpl_list as $tpl_name => $tpl_url) {
+
+					$tpl_confs = $builder->parse(
+						"templates/$tpl_name/templates/config.yaml");
+
+					// Loop template files
+					foreach ($tpl_confs as $tpl_file => $tpl_conf) {
+
+						$file_path = "templates/$tpl_name/" 
+							. @$tpl_conf['output'];
+
+						$file_name = 'base16-'.$tpl_data['scheme-slug']
+							. $tpl_conf['extension'];
+						
+						$render = $builder->renderTemplate(
+							"templates/$tpl_name/templates/$tpl_file.mustache", $tpl_data);
+
+						$builder->writeFile($file_path, $file_name, $render);
+
+						echo "Built $file_name\n";
+					}
+
+				}
+
 			}
 		}
-	}
-	
-	/**
-	 * Uses git to update template or scheme sources
-	 */
-	function updateSources($url_list, $path) 
-	{
-		foreach ($url_list as $name => $url) {
-			echo "\n-- $path/$name\n";
-			
-			if (file_exists("$path/$name")) {
-				echo exec("git -C $path/$name pull\n") . "\n";
-			}
-			else $this->fetchSources($url_list, $path);
-		}
-	}
-	
-	/**
-	 * Renders a template using Mustache
-	 */
-	function renderTemplate($path, $template_data) 
-	{
-		$mustache = new \Mustache_Engine();
-		$tpl = $mustache->loadTemplate($this->readFile($path));
-		return $tpl->render($template_data);
-	}
-	
-	/**
-	 * Uses git to fetch template or scheme sources
-	 */
-	function buildTemplateData($scheme_data) 
-	{
-		$vars['scheme-name'] = $scheme_data["name"];
-		$vars['scheme-author'] = $scheme_data["author"];
-    	$vars['scheme-slug'] = $scheme_data["slug"];
-		
-		$bases = array('00', '01', '02', '03', '04', '05', '06', '07', '08',
-			'09', '0A', '0B', '0C', '0D', '0E', '0F');
-		
-		foreach ($bases as $base) {
-			$base_key = 'base' . $base;
-			$color = new Color($scheme_data[$base_key]);
-			
-			$vars[$base_key. '-hex'] = $color->getHex();
-			$vars[$base_key. '-hex-r'] = substr($color->getHex(), 0, 2);
-			$vars[$base_key. '-hex-g'] = substr($color->getHex(), 2, 2);
-			$vars[$base_key. '-hex-b'] = substr($color->getHex(), 4, 2);
-			$vars[$base_key. '-rgb-r'] = $color->getRgb()['R'];
-			$vars[$base_key. '-rgb-g'] = $color->getRgb()['G'];
-			$vars[$base_key. '-rgb-b'] = $color->getRgb()['B'];
-		}
-		
-		return $vars;
-	}
-	
-	/**
-	 * Reads a file
-	 */
-	function readFile($path) 
-	{
-		return file_get_contents($path);
-	}
-
-	/**
-	 * Writes a file
-	 */
-	function writeFile($file_path, $file_name, $contents) 
-	{
-		if (!is_dir($file_path)) mkdir($file_path);
-		file_put_contents($file_path . '/' . $file_name, $contents);
-	}
-	
+		break;
 }

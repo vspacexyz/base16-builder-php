@@ -6,6 +6,6 @@
         "mexitek/phpcolors": "^0.4.0"
     },
      "autoload": {
-        "psr-4": {"Base16\\": "./"}
+        "psr-4": {"Base16\\": "src/"}
     }
 }
