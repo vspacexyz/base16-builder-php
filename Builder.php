@@ -81,7 +81,8 @@ switch (@$argv[1]) {
 							. $tpl_conf['extension'];
 						
 						$render = $builder->renderTemplate(
-							"templates/$tpl_name/templates/$tpl_file.mustache", $tpl_data);
+							"templates/$tpl_name/templates/$tpl_file.mustache",
+							 $tpl_data);
 
 						$builder->writeFile($file_path, $file_name, $render);
 
