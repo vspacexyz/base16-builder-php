@@ -1,8 +1,8 @@
 # Base16 Builder PHP
-A PHP implementation of a base16 builder that follows the conventions found at: http://chriskempson.com/projects/base16/
+An example PHP implementation of a base16 builder that follows the conventions found at: http://chriskempson.com/projects/base16/
 Requires PHP 5.3 or greater.
 
-**This is an early proof of concept application and is likely to change a lot**
+**This is an early proof of concept application and is likely to change**
 
 ## Installation
 
@@ -16,3 +16,6 @@ Updates all scheme and template repositories as defined in `schemes.yaml` and `t
 
     php base16
 Build all templates using all schemes
+
+## Why on earth use PHP?
+Because anyone can read PHP, even if they can't program :wink:
