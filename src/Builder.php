@@ -11,9 +11,20 @@ namespace Base16;
 
 use Symfony\Component\Yaml\Yaml;
 use Mexitek\PHPColors\Color;
+use Cocur\Slugify\Slugify;
 
 class Builder 
 {
+	private $color;
+	private $slugify;
+
+	/**
+	 * Constructor
+	 */
+	function __construct() 
+	{
+		$this->slugify = new Slugify();
+	}
 
 	/**
 	 * Parses a YAML file
@@ -65,9 +76,9 @@ class Builder
 	 */
 	function buildTemplateData($scheme_data) 
 	{
-		$vars['scheme-name'] = $scheme_data["name"];
+		$vars['scheme-name'] = $scheme_data["scheme"];
 		$vars['scheme-author'] = $scheme_data["author"];
-    	$vars['scheme-slug'] = $scheme_data["slug"];
+    	$vars['scheme-slug'] = $this->slugify($scheme_data["scheme"]);
 		
 		$bases = array('00', '01', '02', '03', '04', '05', '06', '07', '08',
 			'09', '0A', '0B', '0C', '0D', '0E', '0F');
@@ -106,6 +117,14 @@ class Builder
 	{
 		if (!is_dir($file_path)) mkdir($file_path);
 		file_put_contents($file_path . '/' . $file_name, $contents);
+	}
+
+	/**
+	 * Slugify a string
+	 */
+	function slugify($string) 
+	{
+		return $this->slugify->slugify($string);
 	}
 	
 }

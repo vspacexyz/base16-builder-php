@@ -56,26 +56,31 @@ switch (@$argv[1]) {
 	*/
 	default:
 
-		// Loop scheme repositories
-		foreach ($sch_list as $sch_name => $sch_url) {
+		// Loop templates repositories
+		foreach ($tpl_list as $tpl_name => $tpl_url) {
 
-			// Loop scheme files
-			foreach (glob("schemes/$sch_name/*.yaml") as $sch_file) {
+			$tpl_confs = $builder->parse(
+				"templates/$tpl_name/templates/config.yaml");
 
-				$sch_data = $builder->parse($sch_file);
-				$tpl_data = $builder->buildTemplateData($sch_data);
-			
-				// Loop templates repositories
-				foreach ($tpl_list as $tpl_name => $tpl_url) {
+			// Loop template files
+			foreach ($tpl_confs as $tpl_file => $tpl_conf) {
 
-					$tpl_confs = $builder->parse(
-						"templates/$tpl_name/templates/config.yaml");
+				$file_path = "templates/$tpl_name/" 
+					. $tpl_conf['output'];
 
-					// Loop template files
-					foreach ($tpl_confs as $tpl_file => $tpl_conf) {
+				// Remove all previous output
+				array_map('unlink', glob(
+					$file_path. '/base16-*' . $tpl_conf['extension']
+				));
 
-						$file_path = "templates/$tpl_name/" 
-							. @$tpl_conf['output'];
+				// Loop scheme repositories
+				foreach ($sch_list as $sch_name => $sch_url) {
+
+					// Loop scheme files
+					foreach (glob("schemes/$sch_name/*.yaml") as $sch_file) {
+
+						$sch_data = $builder->parse($sch_file);
+						$tpl_data = $builder->buildTemplateData($sch_data);
 
 						$file_name = 'base16-'.$tpl_data['scheme-slug']
 							. $tpl_conf['extension'];
@@ -88,9 +93,7 @@ switch (@$argv[1]) {
 
 						echo "Built $file_name\n";
 					}
-
 				}
-
 			}
 		}
 		break;
