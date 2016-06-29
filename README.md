@@ -2,7 +2,7 @@
 An example PHP implementation of a base16 builder that follows the conventions described at https://github.com/chriskempson/base16.
 Requires PHP 5.3 or greater.
 
-**This is an early proof of concept application and is likely to change**
+**This is an early proof of concept application and is likely to change.** However it is already being used to generate the themes for [Base16 Vim](https://github.com/chriskempson/base16-vim), [Base16 Textmate](https://github.com/chriskempson/base16-textmate), [Base16 Shell](https://github.com/chriskempson/base16-shell) and [Base16 HTML Previews](https://github.com/chriskempson/base16-html-previews).
 
 ## Installation
 
