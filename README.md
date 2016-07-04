@@ -12,10 +12,10 @@ Requires PHP 5.3 or greater.
 
 ## Usage
 
-    php cli.php update
+    php Builder.php update
 Updates all scheme and template repositories as defined in `schemes.yaml` and `templates.yaml`.
 
-    php cli.php
+    php Builder.php
 Build all templates using all schemes
 
 ## Why PHP?
