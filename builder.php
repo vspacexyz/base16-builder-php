@@ -16,9 +16,10 @@ $builder = new Builder;
 
 // Parse sources lists
 $src_list = $builder->parse($sources_list);
+$sch_list = [];
+$tpl_list = [];
 if (file_exists($schemes_list)) $sch_list = $builder->parse($schemes_list);
 if (file_exists($schemes_list)) $tpl_list = $builder->parse($templates_list);
-
 /**
  * Switches between functions based on supplied argument
  */
@@ -55,6 +56,9 @@ switch (@$argv[1]) {
 	* Build all themes and schemes
 	*/
 	default:
+    if (count($sch_list) == 0) echo "Warning: Could not parse schemes or missing $schemes_list, did you do `php $0 update`?\n";
+    if (count($tpl_list) == 0) echo "Warning: Could not parse templates or missing $templates_list, did you do `php $0 update`?\n";
+
 
 		// Loop templates repositories
 		foreach ($tpl_list as $tpl_name => $tpl_url) {
