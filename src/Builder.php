@@ -94,9 +94,6 @@ class Builder
 			$vars[$base_key . '-rgb-r'] = $color->getRgb()['R'];
 			$vars[$base_key . '-rgb-g'] = $color->getRgb()['G'];
 			$vars[$base_key . '-rgb-b'] = $color->getRgb()['B'];
-			$vars[$base_key . '-hsl-h'] = $color->getHsl()['H'];
-			$vars[$base_key . '-hsl-s'] = $color->getHsl()['S'];
-			$vars[$base_key . '-hsl-l'] = $color->getHsl()['L'];
 		}
 		
 		return $vars;
