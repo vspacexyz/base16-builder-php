@@ -19,7 +19,7 @@ $src_list = $builder->parse($sources_list);
 $sch_list = [];
 $tpl_list = [];
 if (file_exists($schemes_list)) $sch_list = $builder->parse($schemes_list);
-if (file_exists($schemes_list)) $tpl_list = $builder->parse($templates_list);
+if (file_exists($templates_list)) $tpl_list = $builder->parse($templates_list);
 /**
  * Switches between functions based on supplied argument
  */
@@ -44,7 +44,7 @@ switch (@$argv[1]) {
 			$sch_list = $builder->parse($schemes_list);
 		}
 
-		if (file_exists($schemes_list)) {
+		if (file_exists($templates_list)) {
 			$tpl_list = $builder->parse($templates_list);
 		}
 
