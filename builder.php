@@ -1,4 +1,7 @@
 <?php
+
+use Base16\Builder;
+
 /**
  * Base16 Builder CLI (Command Line Interface)
  */
@@ -9,8 +12,6 @@ $schemes_list = 'sources/schemes/list.yaml';
 $templates_list = 'sources/templates/list.yaml';
 
 $loader = require __DIR__ . '/vendor/autoload.php';
-
-use Base16\Builder;
 
 $builder = new Builder;
 
