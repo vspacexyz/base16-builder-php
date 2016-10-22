@@ -11,7 +11,7 @@ $sources_list = 'sources.yaml';
 $schemes_list = 'sources/schemes/list.yaml';
 $templates_list = 'sources/templates/list.yaml';
 
-$loader = require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
 $builder = new Builder;
 
