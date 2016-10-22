@@ -16,16 +16,16 @@ require __DIR__ . '/vendor/autoload.php';
 $builder = new Builder;
 
 // Parse sources lists
-$src_list = $builder->parse($sources_list);
+$src_list = Builder::parse($sources_list);
 $sch_list = [];
 $tpl_list = [];
 
 if (file_exists($schemes_list)) {
-	$sch_list = $builder->parse($schemes_list);
+	$sch_list = Builder::parse($schemes_list);
 }
 
 if (file_exists($templates_list)) {
-	$tpl_list = $builder->parse($templates_list);
+	$tpl_list = Builder::parse($templates_list);
 }
 
 /**
@@ -49,11 +49,11 @@ switch (@$argv[1]) {
 
 		// Parse source lists incase the sources have just been fetched
 		if (file_exists($schemes_list)) {
-			$sch_list = $builder->parse($schemes_list);
+			$sch_list = Builder::parse($schemes_list);
 		}
 
 		if (file_exists($templates_list)) {
-			$tpl_list = $builder->parse($templates_list);
+			$tpl_list = Builder::parse($templates_list);
 		}
 
 		$builder->updateSources($sch_list, 'schemes');
@@ -75,7 +75,7 @@ switch (@$argv[1]) {
 	// Loop templates repositories
 	foreach ($tpl_list as $tpl_name => $tpl_url) {
 
-		$tpl_confs = $builder->parse(
+		$tpl_confs = Builder::parse(
 			"templates/$tpl_name/templates/config.yaml");
 
 		// Loop template files
@@ -95,7 +95,7 @@ switch (@$argv[1]) {
 				// Loop scheme files
 				foreach (glob("schemes/$sch_name/*.yaml") as $sch_file) {
 
-					$sch_data = $builder->parse($sch_file);
+					$sch_data = Builder::parse($sch_file);
 					$tpl_data = $builder->buildTemplateData($sch_data);
 
 					$file_name = 'base16-'.$tpl_data['scheme-slug']

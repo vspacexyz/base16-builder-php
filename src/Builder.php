@@ -19,19 +19,19 @@ class Builder
 	private $slugify;
 
 	/**
+	 * Parses a YAML file
+	 */
+	static public function parse($path) 
+	{
+		return Yaml::parse( file_get_contents($path) );
+	}
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() 
 	{
 		$this->slugify = new Slugify();
-	}
-
-	/**
-	 * Parses a YAML file
-	 */
-	public function parse($path) 
-	{
-		return Yaml::parse( file_get_contents($path) );
 	}
 
 	/**
