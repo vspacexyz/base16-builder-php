@@ -15,7 +15,6 @@ use Cocur\Slugify\Slugify;
 
 class Builder 
 {
-	private $color;
 	private $slugify;
 
 	/**
