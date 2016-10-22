@@ -11,6 +11,11 @@ $sources_list = 'sources.yaml';
 $schemes_list = 'sources/schemes/list.yaml';
 $templates_list = 'sources/templates/list.yaml';
 
+if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
+	echo "You must run 'composer install' before using base16-builder-php.\n";
+	exit(1);
+}
+
 require __DIR__ . '/vendor/autoload.php';
 
 $builder = new Builder;
