@@ -103,7 +103,7 @@ switch (@$argv[1]) {
 						$sch_data = Builder::parse($sch_file);
 						$tpl_data = $builder->buildTemplateData($sch_data);
 
-						$file_name = 'base16-'.$tpl_data['scheme-slug']
+						$file_name = 'base16-' . basename($sch_file, ".yaml") 
 							. $tpl_conf['extension'];
 
 						$render = $builder->renderTemplate(
