@@ -11,26 +11,15 @@ namespace Base16;
 
 use Symfony\Component\Yaml\Yaml;
 use Mexitek\PHPColors\Color;
-use Cocur\Slugify\Slugify;
 
 class Builder
 {
-	private $slugify;
-
 	/**
 	 * Parses a YAML file
 	 */
 	static public function parse($path)
 	{
 		return Yaml::parse( file_get_contents($path) );
-	}
-
-	/**
-	 * Constructor
-	 */
-	public function __construct()
-	{
-		$this->slugify = new Slugify();
 	}
 
 	/**
@@ -50,13 +39,13 @@ class Builder
 	 */
 	public function updateSources($url_list, $path)
 	{
+		
 		foreach ($url_list as $name => $url) {
 			echo "\n-- $path/$name\n";
-
 			if (file_exists("$path/$name")) {
 				echo exec("git -C $path/$name pull\n") . "\n";
 			} else {
-				$this->fetchSources($url_list, $path);
+				$this->fetchSources([$name => $url], $path);
 			}
 		}
 	}
@@ -121,7 +110,7 @@ class Builder
 	 */
 	public function slugify($string)
 	{
-		return $this->slugify->slugify($string);
+		return str_replace(' ', '-', strtolower($string));
 	}
 
 }
