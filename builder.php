@@ -12,7 +12,8 @@ $schemes_list = 'sources/schemes/list.yaml';
 $templates_list = 'sources/templates/list.yaml';
 
 if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
-	echo "You must run 'composer install' before using base16-builder-php.\n";
+	echo "You must run 'composer install' before using base16-builder-php."
+		. "\n";
 	exit(1);
 }
 
@@ -70,10 +71,12 @@ switch (@$argv[1]) {
 	*/
 	default:
 		if (count($sch_list) == 0) {
-			echo "Warning: Could not parse schemes or missing $schemes_list, did you do `php ${argv[0]} update`?\n";
+			echo "Warning: Could not parse schemes or missing "
+				. "$schemes_list, did you do `php ${argv[0]} update`?\n";
 		}
 		if (count($tpl_list) == 0) {
-			echo "Warning: Could not parse templates or missing $templates_list, did you do `php ${argv[0]} update`?\n";
+			echo "Warning: Could not parse templates or missing "
+				. "$templates_list, did you do `php ${argv[0]} update`?\n";
 		}
 
 
@@ -103,11 +106,17 @@ switch (@$argv[1]) {
 						$sch_data = Builder::parse($sch_file);
 						$tpl_data = $builder->buildTemplateData($sch_data);
 
-						$file_name = 'base16-' . basename($sch_file, ".yaml") 
+						$sch_slug = Builder::slugify(
+							basename($sch_file, '.yaml'));
+						$tpl_data['scheme-slug'] = $sch_slug;
+						
+
+						$file_name = 'base16-' .  $sch_slug
 							. $tpl_conf['extension'];
 
 						$render = $builder->renderTemplate(
-							"templates/$tpl_name/templates/$tpl_file.mustache",
+							"templates/$tpl_name/templates/$tpl_file"
+								. ".mustache",
 							 $tpl_data);
 
 						$builder->writeFile($file_path, $file_name, $render);

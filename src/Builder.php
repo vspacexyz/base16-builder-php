@@ -61,7 +61,7 @@ class Builder
 	}
 
 	/**
-	 * Uses git to fetch template or scheme sources
+	 * Populates a list of variables to be used in templates
 	 */
 	public function buildTemplateData($scheme_data)
 	{
@@ -110,7 +110,7 @@ class Builder
 	/**
 	 * Slugify a string
 	 */
-	public function slugify($string)
+	 static public function slugify($string)
 	{
 		return str_replace(' ', '-', strtolower($string));
 	}
